@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Helm version check
+helm version | grep -q v3 || echo "Wrong helm version should be 3" && echo "Helm version check OK"
+
+
+# Install Ingress
+helm install default-ingress stable/nginx-ingress --namespace kube-system --set rbac.create=true --set controller.hostNetwork=true
+
+# Install Kubedb
+helm repo add appscode https://charts.appscode.com/stable/
+helm repo update
+helm install kubedb-operator appscode/kubedb --version v0.13.0-rc.0 --namespace kube-system
+
+until kubectl --namespace=kube-system get deployments -l "release=kubedb-operator, app=kubedb" | grep -m 1 "1/1"; do : ; done
+
+helm install kubedb-catalog appscode/kubedb-catalog --version v0.13.0-rc.0 --namespace kube-system

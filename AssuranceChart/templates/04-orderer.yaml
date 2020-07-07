@@ -1,0 +1,19 @@
+{{- /* set root with the value of "." as the "." is override inside the range loop */}}
+{{- $root := . }}
+{{- $app := $root.Values.app }}
+{{- $tag := $root.Values.tag }}
+{{- $fabricVersion := $root.Values.fabricVersion }}
+{{- $fabricSubComponentVersion := $root.Values.fabricSubComponentVersion }}
+
+
+{{- range $ordererOrg := $root.Values.ordererOrgs}}
+
+{{- $orgName := $ordererOrg.name }}
+{{- $orgDomainName := $ordererOrg.domain }}
+
+{{- $scope := dict "app" $app "tag" $tag "fabricVersion" $fabricVersion "fabricSubComponentVersion" $fabricSubComponentVersion "orgName" $orgName "orgDomainName" $orgDomainName  }}
+{{- template "orderer.deployment" $scope }}
+{{- template "orderer.service" $scope }}
+{{- template "orderer.job" $scope }}
+
+{{- end }}

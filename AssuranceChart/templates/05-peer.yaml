@@ -1,0 +1,29 @@
+{{- $root := . }}
+{{- $app := $root.Values.app }}
+{{- $tag := $root.Values.tag }}
+{{- $fabricVersion := $root.Values.fabricVersion }}
+{{- $fabricSubComponentVersion := $root.Values.fabricSubComponentVersion }}
+{{- $ingressPath := .Values.ingress.path -}}
+{{- $ingressHost := .Values.ingress.host -}}
+
+{{- range $peerOrg := $root.Values.peerOrgs}}
+
+{{- $orgName :=  $peerOrg.name }}
+{{- $orgDomainName := $peerOrg.domain }}
+
+{{- $scope := dict "app" $app "tag" $tag "fabricVersion" $fabricVersion "fabricSubComponentVersion" $fabricSubComponentVersion "orgName" $orgName "orgDomainName" $orgDomainName "ingressHost" $ingressHost }}
+
+{{- template "peer.deployment" $scope }}
+{{- template "peer.service" $scope }}
+{{- template "peer.job" $scope }}
+
+{{- template "back.postgres" $scope }}
+{{- template "back.deployment" $scope }}
+{{- template "back.service" $scope }}
+{{- template "back.ingress" $scope }}
+
+{{- template "ui.deployment" $scope }}
+{{- template "ui.service" $scope }}
+{{- template "ui.ingress" $scope }}
+
+{{- end }}

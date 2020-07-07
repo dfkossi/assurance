@@ -1,0 +1,33 @@
+{{- $root := . }}
+{{- $fabricVersion := $root.Values.fabricVersion }}
+{{- $tag := $root.Values.tag }}
+{{- $pvc := printf "assurance-shared" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: pre-install
+    annotations:
+      "helm.sh/hook": "pre-install"
+      "helm.sh/hook-delete-policy": "hook-succeeded,before-hook-creation"
+      "helm.sh/hook-weight": "1"
+spec:
+  template:
+    metadata:
+      labels:
+        app: hyperledger
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: pre-install
+          image:  hyperledger/fabric-tools:amd64-{{ $fabricVersion }}
+          workingDir: /cryptogen
+          command: [ "/bin/bash", "-c" ]
+          args: ["mkdir -p /cryptogen/app; wget https://github.com/dfkossi/assurance/-/archive/{{ $tag }}/assurance.tar.bz2 -O- | tar xjf - --strip-components=1 -C /cryptogen/app; /cryptogen/app/network/pre-install"] 
+          volumeMounts:
+           - mountPath: /cryptogen
+             name: certificate
+      volumes:
+        - name: certificate
+          persistentVolumeClaim:
+              claimName: {{ $pvc }}
+---

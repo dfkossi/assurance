@@ -1,0 +1,8 @@
+cryptogen
+chaincode/chaincode.test
+chaincode/chaincode
+*.sum
+*.mod
+network/crypto-config/*
+network/channel-artifacts/*
+crypto-config

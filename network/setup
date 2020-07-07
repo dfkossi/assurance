@@ -1,0 +1,98 @@
+#!/bin/bash
+
+echo "Copy chaincode example"
+mkdir -p $GOPATH/src/github.com/hyperledger/fabric/examples/chaincode/go/
+cp -R /cryptogen/app/chaincode $GOPATH/src/github.com/hyperledger/fabric/examples/chaincode/go/
+
+sleep 120
+echo "================ Setup peer0.CyberTrust on channel myc ==============="
+cd /cryptogen/
+
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric
+export CORE_PEER_LOCALMSPID=Assurance
+export CORE_PEER_TLS_ROOTCERT_FILE=/cryptogen/crypto-config/peerOrganizations/assurance.example.com/peers/peer0.assurance.example.com/tls/ca.crt
+export CORE_PEER_ADDRESS=peer0-assurance:7051
+export CORE_PEER_MSPCONFIGPATH=/cryptogen/crypto-config/peerOrganizations/assurance.example.com/users/Admin\@assurance.example.com/msp/
+
+echo "================Create channel================"
+peer channel create -o orderer0:7050 -c myc -f channel.tx
+sleep 3
+
+echo "Channel Join"
+peer channel join -b myc.block 
+#peer channel update -o orderer0:7050 -c myc -f Org1MSPanchors_channel.tx
+
+sleep 3
+echo "Chaincode Install"
+peer chaincode install -n mycc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode -v v0
+
+
+echo "================ Setup peer0.Isp1 on channel myc ==============="
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric
+export CORE_PEER_LOCALMSPID=Isp1
+export CORE_PEER_TLS_ROOTCERT_FILE=/cryptogen/crypto-config/peerOrganizations/isp1.example.com/peers/peer0.isp1.example.com/tls/ca.crt
+export CORE_PEER_ADDRESS=peer0-isp1:7051
+export CORE_PEER_MSPCONFIGPATH=/cryptogen/crypto-config/peerOrganizations/isp1.example.com/users/Admin\@isp1.example.com/msp/
+
+echo "Channel Join"
+peer channel join -b myc.block
+sleep 3
+
+echo "Chaincode Install"
+peer chaincode install -n mycc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode -v v0
+sleep 3
+
+echo "================ Setup peer0.Isp2 on channel myc ==============="
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric
+export CORE_PEER_LOCALMSPID=Isp2
+export CORE_PEER_TLS_ROOTCERT_FILE=/cryptogen/crypto-config/peerOrganizations/isp2.example.com/peers/peer0.isp2.example.com/tls/ca.crt
+export CORE_PEER_ADDRESS=peer0-isp2:7051
+export CORE_PEER_MSPCONFIGPATH=/cryptogen/crypto-config/peerOrganizations/isp2.example.com/users/Admin\@isp2.example.com/msp/
+
+echo "Channel Join"
+peer channel join -b myc.block
+sleep 3
+
+echo "Chaincode Install"
+peer chaincode install -n mycc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode -v v0
+sleep 3
+
+echo "================ Setup peer0.Lea1 on channel myc ==============="
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric
+export CORE_PEER_LOCALMSPID=Lea1
+export CORE_PEER_TLS_ROOTCERT_FILE=/cryptogen/crypto-config/peerOrganizations/lea1.example.com/peers/peer0.lea1.example.com/tls/ca.crt
+export CORE_PEER_ADDRESS=peer0-lea1:7051
+export CORE_PEER_MSPCONFIGPATH=/cryptogen/crypto-config/peerOrganizations/lea1.example.com/users/Admin\@lea1.example.com/msp/
+
+echo "Channel Join"
+peer channel join -b myc.block
+sleep 3
+
+echo "Chaincode Install"
+peer chaincode install -n mycc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode -v v0
+sleep 3
+
+echo "================ Setup peer0.Lea2 on channel myc ==============="
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric
+export CORE_PEER_LOCALMSPID=Lea2
+export CORE_PEER_TLS_ROOTCERT_FILE=/cryptogen/crypto-config/peerOrganizations/lea2.example.com/peers/peer0.lea2.example.com/tls/ca.crt
+export CORE_PEER_ADDRESS=peer0-lea2:7051
+export CORE_PEER_MSPCONFIGPATH=/cryptogen/crypto-config/peerOrganizations/lea2.example.com/users/Admin\@lea2.example.com/msp/
+
+echo "Channel Join"
+peer channel join -b myc.block
+sleep 3
+
+echo "Chaincode Install"
+peer chaincode install -n mycc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode -v v0
+sleep 3
+
+
+echo "peer version is `peer version`"
+
+echo "Chaincode Instantiate"
+peer chaincode instantiate -o orderer0:7050 -C myc -n mycc -v v0 -c '{"Args":["init"]}' 
+
+#peer chaincode invoke -o orderer0:7050 -C myc -n mycc --peerAddresses peer0-assurance:7051 --peerAddresses peer0-isp1:7052 -c '{"Args":["invoke"]}'
+
+echo "DONE"

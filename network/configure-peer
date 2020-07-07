@@ -1,0 +1,35 @@
+#!/bin/sh
+
+
+
+cd /cryptogen/
+
+echo "====================> Copying chaincode"
+CHAINCODE_URL=gitlab.scorechain.com/cyber-trust/cyber-trust/fabric-configurator/chaincode
+mkdir -p $GOPATH/src/$CHAINCODE_URL
+cp -R /cryptogen/app/chaincode/* $GOPATH/src/$CHAINCODE_URL
+
+echo "====================> Wait for myc.block to appear"
+until [ -e myc.block ]; do : ; done
+
+echo "====================> Wait for orderer:7050 to answer"
+until nc -z orderer0 7050; do : ; done
+
+echo "====================> Wait for $1-$2 to answer"
+until nc -z "$1-$2" 7051; do : ; done
+
+echo "====================> Join peer to channel"
+peer channel join -b myc.block
+
+echo "====================> Configure this peer to be a Anchor Peer"
+peer channel update -o orderer0:7050 -c myc -f "$2.tx"
+
+echo "====================> Chaincode Install"
+peer chaincode install -n mycc -p $CHAINCODE_URL -v v0
+
+if [ $2 = 'assurance' ]
+then
+    echo "Chaincode Instantiate"
+    peer chaincode instantiate -o orderer0:7050 -C myc -n mycc -v v0 -c '{"Args":["init"]}' --collections-config $GOPATH/src/$CHAINCODE_URL/collections_config.json
+	sleep 3600    
+fi

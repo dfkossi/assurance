@@ -1,0 +1,27 @@
+#!/bin/bash
+
+echo "Initial setup: Generate Crypto Material"
+cd /cryptogen/app
+cp /cryptogen/app/configtx.yaml /cryptogen/
+rm -rf /cryptogen/crypto-config
+cryptogen generate --config=/cryptogen/app/crypto-config.yaml --output=/cryptogen/crypto-config
+
+tar cf /cryptogen/crypto-config.tar /cryptogen/crypto-config
+
+cd /cryptogen/app
+
+echo "Initial setup: Genesis & Channel Block"
+export FABRIC_CFG_PATH=/cryptogen
+mkdir /cryptogen/var/orderer.example.com/genesis/ -p
+configtxgen -channelID default -profile Genesis -outputBlock /cryptogen/var/orderer.example.com/genesis/orderer.genesis.block
+configtxgen -channelID myc -profile Public -outputCreateChannelTx /cryptogen/channel.tx
+
+configtxgen -channelID myc -profile Public -outputAnchorPeersUpdate /cryptogen/assurance.tx -asOrg Assurance
+configtxgen -channelID myc -profile Public -outputAnchorPeersUpdate /cryptogen/isp1.tx  -asOrg Isp1
+configtxgen -channelID myc -profile Public -outputAnchorPeersUpdate /cryptogen/isp2.tx  -asOrg Isp2
+configtxgen -channelID myc -profile Public -outputAnchorPeersUpdate /cryptogen/lea1.tx  -asOrg Lea1
+configtxgen -channelID myc -profile Public -outputAnchorPeersUpdate /cryptogen/lea2.tx  -asOrg Lea2
+
+cp -R /cryptogen/var/orderer.example.com/genesis/orderer.genesis.block /var/hyperledger/genesis/
+cp -R /cryptogen/var/orderer.example.com/genesis/orderer.genesis.block /cryptogen/
+

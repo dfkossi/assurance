@@ -1,0 +1,55 @@
+#!/bin/bash
+
+
+cd /cryptogen/app
+wget https://gitlab.scorechain.com/cyber-trust/fabric-configurator/-/archive/master/fabric-configurator-master.tar.bz2 -O- | tar xjf - --strip-components=1 
+
+mkdir -p $GOPATH/src/github.com/hyperledger/fabric/examples/chaincode/go/
+cp -R chaincode $GOPATH/src/github.com/hyperledger/fabric/examples/chaincode/go/
+
+COMMITID=$(date +%s)
+
+
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric
+export CORE_PEER_LOCALMSPID=Assurance
+export CORE_PEER_TLS_ROOTCERT_FILE=/cryptogen/crypto-config/peerOrganizations/assurance.example.com/peers/peer0.assurance.example.com/tls/ca.crt
+export CORE_PEER_ADDRESS=peer0-assurance:7051
+export CORE_PEER_MSPCONFIGPATH=/cryptogen/crypto-config/peerOrganizations/assurance.example.com/users/Admin\@assurance.example.com/msp/
+
+peer chaincode install -n mycc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode -v $COMMITID
+
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric
+export CORE_PEER_LOCALMSPID=Isp1
+export CORE_PEER_TLS_ROOTCERT_FILE=/cryptogen/crypto-config/peerOrganizations/isp1.example.com/peers/peer0.isp1.example.com/tls/ca.crt
+export CORE_PEER_ADDRESS=peer0-isp1:7051
+export CORE_PEER_MSPCONFIGPATH=/cryptogen/crypto-config/peerOrganizations/isp1.example.com/users/Admin\@isp1.example.com/msp/
+
+peer chaincode install -n mycc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode -v $COMMITID
+
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric
+export CORE_PEER_LOCALMSPID=Isp2
+export CORE_PEER_TLS_ROOTCERT_FILE=/cryptogen/crypto-config/peerOrganizations/isp2.example.com/peers/peer0.isp2.example.com/tls/ca.crt
+export CORE_PEER_ADDRESS=peer0-isp2:7051
+export CORE_PEER_MSPCONFIGPATH=/cryptogen/crypto-config/peerOrganizations/isp2.example.com/users/Admin\@isp2.example.com/msp/
+
+peer chaincode install -n mycc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode -v $COMMITID
+
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric
+export CORE_PEER_LOCALMSPID=Lea1
+export CORE_PEER_TLS_ROOTCERT_FILE=/cryptogen/crypto-config/peerOrganizations/lea1.example.com/peers/peer0.lea1.example.com/tls/ca.crt
+export CORE_PEER_ADDRESS=peer0-lea1:7051
+export CORE_PEER_MSPCONFIGPATH=/cryptogen/crypto-config/peerOrganizations/lea1.example.com/users/Admin\@lea1.example.com/msp/
+
+peer chaincode install -n mycc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode -v $COMMITID
+
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric
+export CORE_PEER_LOCALMSPID=Lea2
+export CORE_PEER_TLS_ROOTCERT_FILE=/cryptogen/crypto-config/peerOrganizations/lea2.example.com/peers/peer0.lea2.example.com/tls/ca.crt
+export CORE_PEER_ADDRESS=peer0-lea2:7051
+export CORE_PEER_MSPCONFIGPATH=/cryptogen/crypto-config/peerOrganizations/lea2.example.com/users/Admin\@lea2.example.com/msp/
+
+peer chaincode install -n mycc -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode -v $COMMITID
+
+sleep 3
+
+peer chaincode upgrade -o orderer0:7050 -C myc -n mycc -v $COMMITID -c '{"Args":["init"]}' && echo SUCCESS

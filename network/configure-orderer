@@ -1,0 +1,18 @@
+#!/bin/sh
+
+cd /cryptogen/
+
+export USER_CRYPTO=/cryptogen/crypto-config/peerOrganizations/assurance.example.com/users/
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric
+export CORE_PEER_LOCALMSPID=Assurance
+export CORE_PEER_TLS_ROOTCERT_FILE=$USER_CRYPTO/Admin\@assurance.example.com/tls/ca.crt
+export CORE_PEER_ADDRESS=peer0-assurance:7051
+export CORE_PEER_MSPCONFIGPATH=$USER_CRYPTO/Admin\@assurance.example.com/msp/
+
+echo "====================> Wait for orderer0:7050 to answer"
+until nc -z orderer0 7050; do : ; done
+
+echo "====================> Create channel (generate: myc.block) "
+peer channel create -o orderer0:7050 -c myc -f channel.tx
+
+echo "DONE"

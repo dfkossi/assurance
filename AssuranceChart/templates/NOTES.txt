@@ -1,0 +1,2 @@
+Application URL 1: http://www.assurance.{{ .Values.tag }}.{{ .Values.ingress.host }}
+Application URL 2: http://www.isp1.{{ .Values.tag }}.{{ .Values.ingress.host }}
