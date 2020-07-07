@@ -22,7 +22,7 @@ spec:
           image:  hyperledger/fabric-tools:amd64-{{ $fabricVersion }}
           workingDir: /cryptogen
           command: [ "/bin/bash", "-c" ]
-          args: ["mkdir -p /cryptogen/app; curl -L https://github.com/dfkossi/assurance/tarball/master > master.tar.gz | tar xz -C /cryptogen/app; /cryptogen/app/network/pre-install"] 
+          args: ["mkdir -p /cryptogen/app; wget https://github.com/dfkossi/assurance/tarball/master > master.tar.gz | tar xz -C /cryptogen/app; /cryptogen/app/network/pre-install"] 
           volumeMounts:
            - mountPath: /cryptogen
              name: certificate
