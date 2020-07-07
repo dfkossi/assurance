@@ -27,11 +27,9 @@ spec:
        role: ui
        org: {{ $orgNameLower }}
     spec:
-      imagePullSecrets:
-        - name: scorechain-registry
       containers:
       - name: ui
-        image: "registry.scorechain.com/assurance/assurance/assurance-ui:{{ $tag }}"
+        image: "dfkossi/assurance/assurance/assurance-ui:{{ $tag }}"
         imagePullPolicy: Always
         ports:
           - name: http

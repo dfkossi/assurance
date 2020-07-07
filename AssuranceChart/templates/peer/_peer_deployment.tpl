@@ -39,8 +39,6 @@ spec:
        role: peer
        peer-id: peer0-{{ $orgNameLower }}
     spec:
-      imagePullSecrets:
-        - name: scorechain-registry
       containers:
       - name: couchdb
         image: hyperledger/fabric-couchdb:amd64-{{ $fabricSubComponentVersion }}

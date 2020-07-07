@@ -32,11 +32,9 @@ spec:
        role: back
        org: {{ $orgName | lower }}
     spec:
-      imagePullSecrets:
-        - name: scorechain-registry
       containers:            
       - name: backend
-        image: "registry.scorechain.com/assurance/assurance/assurance-backend:{{ $tag }}"
+        image: "dfkossi/assurance/assurance-backend:{{ $tag }}"
         imagePullPolicy: Always
         volumeMounts:
           - mountPath: /cryptogen
