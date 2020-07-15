@@ -73,12 +73,13 @@ channels:
         chaincodeQuery: true
         ledgerQuery: true
         eventSource: true
-
+        
       peer0.isp1.example.com:
         endorsingPeer: true
         chaincodeQuery: true
         ledgerQuery: true
         eventSource: true
+
 
     # [Optional]. what chaincodes are expected to exist on this channel? The application can use
     # this information to validate that the target peers are in the expected state by comparing
@@ -130,7 +131,7 @@ organizations:
   # peers with a public URL to send transaction proposals. The file will not contain private
   # information reserved for members of the organization, such as admin key and certificate,
   # fabric-ca registrar enroll ID and secret, etc.
-
+   
   Assurance:
     mspid: Assurance
     peers:
@@ -160,7 +161,7 @@ organizations:
 #
 orderers:
   orderer.example.com:
-    url: grpc://orderer0:7050
+    url: grpc://localhost:30050
 
     # these are standard properties defined by the gRPC library
     # they will be passed in as-is to gRPC client constructor
@@ -177,7 +178,7 @@ orderers:
 peers:
   peer0.org1.example.com:
     # this URL is used to send endorsement and query requests
-    url: grpc://peer0-org1:7051
+    url: grpc://localhost:30056
 
     grpcOptions:
       ssl-target-name-override: peer0.org1.example.com
@@ -185,14 +186,14 @@ peers:
     #   path: /cryptogen/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 
   peer0.assurance.example.com:
-    url: grpc://peer0-assurance:7051
+    url: grpc://localhost:30051
     grpcOptions:
       ssl-target-name-override: peer0.assurance.example.com
     # tlsCACerts:
     #   path: /cryptogen/crypto-config/peerOrganizations/assurance.example.com/peers/peer0.assurance.example.com/tls/ca.crt
 
   peer0.isp1.example.com:
-    url: grpc://peer0-isp1:7051
+    url: grpc://localhost:30052
     grpcOptions:
       ssl-target-name-override: peer0.isp1.example.com
     # tlsCACerts:
@@ -220,7 +221,7 @@ certificateAuthorities:
         enrollSecret: adminpw
     # [Optional] The optional name of the CA.
     caName: ca-org1
-  
+
   ca-assurance:
     url: http://ca-assurance:7054
     httpOptions:
@@ -232,7 +233,7 @@ certificateAuthorities:
         enrollSecret: adminpw
     # [Optional] The optional name of the CA.
     caName: ca-assurance
-
+    
   ca-isp1:
     url: http://ca-isp1:7054
     httpOptions:
