@@ -5,9 +5,9 @@ export const configurationGeneral = {
       username: process.env.POSTGRES_USER || 'postgres',
       password: process.env.POSTGRES_PASSWORD || 'postgres',
       connector: 'postgresql',
-      host: process.env.POSTGRES_HOST || 'localhost',
+      host: process.env.POSTGRES_HOST || 'postgres',
       port: 5432,
-      database: 'blockchainproject',
+      database: 'postgres',
     },
   },
   logger: {
@@ -16,12 +16,30 @@ export const configurationGeneral = {
   },
 
   fabricNetworkConfiguration: {
-    localMspId: 'partya',
-    mspConfigPath: `/Users/admin/go/src/test/Blockchain-Project/network/crypto-config/peerOrganizations/partya.example.com/users/Admin@partya.example.com/msp`,
-    /* mspConfigPath: `/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/partya.example.com/users/Admin@partya.example.com/msp`, */
-    commonConnectionProfilePath: '/Users/admin/go/src/test/Blockchain-Project/network/network-config.yaml',
-    network: 'irs',
-    chaincodeId: 'irscc',
+    localMspId: process.env.CORE_PEER_LOCALMSPID,
+    mspConfigPath:
+      process.env.TELEPRESENCE_CONTAINER_NAMESPACE != undefined
+        ? './src/config/cryptogen/msp'
+        : process.env.CORE_USER_MSP_CONFIGPATH,
+    commonConnectionProfilePath:
+      process.env.KUBERNETES_SERVICE_HOST === undefined
+        ? './config/network-config-local.yaml'
+        : './config/network-config.yaml',
+    network: 'myc',
+    chaincodeId: 'mycc',
   },
 };
 export default configurationGeneral;
+
+console.log(
+  'process.env.CORE_USER_MSP_CONFIGPATH',
+  process.env.CORE_USER_MSP_CONFIGPATH,
+);
+console.log(
+  'process.env.CORE_PEER_LOCALMSPID',
+  process.env.CORE_PEER_LOCALMSPID,
+);
+console.log(
+  'process.env.TELEPRESENCE_CONTAINER_NAMESPACE',
+  process.env.TELEPRESENCE_CONTAINER_NAMESPACE,
+);
