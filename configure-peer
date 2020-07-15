@@ -5,7 +5,7 @@
 cd /cryptogen/
 
 echo "====================> Copying chaincode"
-CHAINCODE_URL=gitlab.scorechain.com/cyber-trust/cyber-trust/fabric-configurator/chaincode
+CHAINCODE_URL=github.com/dfkossi/assurance/chaincode
 mkdir -p $GOPATH/src/$CHAINCODE_URL
 cp -R /cryptogen/app/chaincode/* $GOPATH/src/$CHAINCODE_URL
 
@@ -30,6 +30,6 @@ peer chaincode install -n mycc -p $CHAINCODE_URL -v v0
 if [ $2 = 'assurance' ]
 then
     echo "Chaincode Instantiate"
-    peer chaincode instantiate -o orderer0:7050 -C myc -n mycc -v v0 -c '{"Args":["init"]}' --collections-config $GOPATH/src/$CHAINCODE_URL/collections_config.json
+    peer chaincode instantiate -o orderer0:7050 -C myc -n mycc -v v0 -c '{"Args":["init"]}' 
 	sleep 3600    
 fi

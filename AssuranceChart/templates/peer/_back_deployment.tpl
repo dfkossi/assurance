@@ -34,7 +34,7 @@ spec:
     spec:
       containers:            
       - name: backend
-        image: "dfkossi/assurance/assurance-backend:{{ $tag }}"
+        image: "dfkossi/assurance-backend:{{ $tag }}"
         imagePullPolicy: Always
         volumeMounts:
           - mountPath: /cryptogen

@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: ui
-        image: "dfkossi/assurance/assurance/assurance-ui:{{ $tag }}"
+        image: "dfkossi/assurance-ui:{{ $tag }}"
         imagePullPolicy: Always
         ports:
           - name: http
