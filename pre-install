@@ -18,9 +18,6 @@ configtxgen -channelID myc -profile Public -outputCreateChannelTx /cryptogen/cha
 
 configtxgen -channelID myc -profile Public -outputAnchorPeersUpdate /cryptogen/assurance.tx -asOrg Assurance
 configtxgen -channelID myc -profile Public -outputAnchorPeersUpdate /cryptogen/isp1.tx  -asOrg Isp1
-configtxgen -channelID myc -profile Public -outputAnchorPeersUpdate /cryptogen/isp2.tx  -asOrg Isp2
-configtxgen -channelID myc -profile Public -outputAnchorPeersUpdate /cryptogen/lea1.tx  -asOrg Lea1
-configtxgen -channelID myc -profile Public -outputAnchorPeersUpdate /cryptogen/lea2.tx  -asOrg Lea2
 
 cp -R /cryptogen/var/orderer.example.com/genesis/orderer.genesis.block /var/hyperledger/genesis/
 cp -R /cryptogen/var/orderer.example.com/genesis/orderer.genesis.block /cryptogen/
